@@ -1,15 +1,20 @@
 package com.spring_ai.practice_project.service;
 
+import com.spring_ai.practice_project.tool.WeatherTools;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TravelPlannerService {
 
     private final ChatClient chatClient;
+    private final WeatherTools weatherTools;
 
-    public TravelPlannerService(ChatClient chatClient) {
+    @Autowired
+    public TravelPlannerService(ChatClient chatClient, WeatherTools weatherTools) {
         this.chatClient = chatClient;
+        this.weatherTools = weatherTools;
     }
 
     public String getTravelRecommendations(String destination, String interests, Integer days, String budget) {
@@ -31,6 +36,7 @@ public class TravelPlannerService {
             If budget is specified, provide recommendations suitable for a {budget} budget.
             
             Use the country information tool if you need specific details about the country.
+            Use the weather tools to get current weather information and best time to visit information.
             """;
         
         String userPrompt = buildUserPrompt(destination, interests, days, budget);
@@ -38,7 +44,7 @@ public class TravelPlannerService {
         return chatClient.prompt()
                 .system(systemPrompt)
                 .user(userPrompt)
-                .toolNames("countryByCapital")
+                .toolNames("countryByCapital", "getCurrentWeather", "getBestTimeToVisit")
                 .call()
                 .content();
     }
@@ -67,6 +73,7 @@ public class TravelPlannerService {
             
             Format the itinerary in a clear, readable structure with day headers.
             Use the country information tool if you need specific details about the country.
+            Use the weather tools to get current weather information and best time to visit information.
             """.formatted(
                 days,
                 destination,
@@ -80,7 +87,7 @@ public class TravelPlannerService {
         return chatClient.prompt()
                 .system(systemPrompt)
                 .user(userPrompt)
-                .toolNames("countryByCapital")
+                .toolNames("countryByCapital", "getCurrentWeather", "getBestTimeToVisit")
                 .call()
                 .content();
     }
