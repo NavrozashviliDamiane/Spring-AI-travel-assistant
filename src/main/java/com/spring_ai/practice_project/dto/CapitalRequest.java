@@ -1,16 +1,12 @@
 package com.spring_ai.practice_project.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CapitalRequest {
     private String capital;
-    
-    public CapitalRequest() {
-    }
-    
-    public String getCapital() {
-        return capital;
-    }
-    
-    public void setCapital(String capital) {
-        this.capital = capital;
-    }
 }
